@@ -12,7 +12,9 @@
         padding:10px;
         width:55%;
     }
-
+    .error{
+        color:red;
+    }
 </style>
     <body>
     <div class="main">
@@ -32,6 +34,15 @@
             <div class="form-group">           
                 <label for="title">Description</label>
                 <textarea class="form-control" name="description"></textarea>
+            </div>
+            <div class="error">
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
             </div>
             <button class="btn btn-primary">Create</button>
         </form>

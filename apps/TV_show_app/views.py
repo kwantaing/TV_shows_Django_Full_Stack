@@ -15,9 +15,15 @@ def new(request):
     return render(request,'index.html')
 
 def add_show(request):
+    errors = models.Show.objects.basic_validator(request.POST)
     if request.method == "POST":
-        models.Show.objects.create(title=request.POST["title"],network=request.POST["network"],release_date=request.POST["release_date"],description = request.POST["description"])
-        return redirect('/shows/'+str(models.Show.objects.last().id))
+        if len(errors)>0:
+            for key, value in errors.items():
+                messages.error(request, value)
+            return redirect('/shows/new')
+        else:
+            models.Show.objects.create(title=request.POST["title"],network=request.POST["network"],release_date=request.POST["release_date"],description = request.POST["description"])
+            return redirect('/shows/'+str(models.Show.objects.last().id))
 
 def show_detail(request,show_id):
     context={
@@ -35,13 +41,21 @@ def edit(request,show_id):
     return render(request,'edit.html',context)
     
 def update(request,show_id):
-    update_show = models.Show.objects.get(id=show_id)
-    update_show.title = request.POST["title"]
-    update_show.network = request.POST["network"]
-    update_show.release_date = request.POST["release_date"]
-    update_show.description = request.POST["description"]
-    update_show.save()
-    return redirect('/shows/'+str(show_id))
+    errors = models.Show.objects.basic_validator(request.POST)
+
+    if len(errors)>0:
+        for key, value in errors.items():
+            messages.error(request, value)
+        return redirect('/shows/'+str(show_id)+"/edit")
+    else:
+        update_show = models.Show.objects.get(id=show_id)
+        update_show.title = request.POST["title"]
+        update_show.network = request.POST["network"]
+        update_show.release_date = request.POST["release_date"]
+        update_show.description = request.POST["description"]
+        update_show.save()
+        messages.success(request, "Show successfully updated")
+        return redirect('/shows/'+str(show_id))
 
 def delete(request,show_id):
     delete_show = models.Show.objects.get(id=show_id)

@@ -1,9 +1,12 @@
 from __future__ import unicode_literals
+from datetime import datetime
 from django.db import models
 
 
 class ShowManager(models.Manager):
     def basic_validator(self,postData):
+        now = datetime.now()
+        now = now.strftime("%Y-%m-%d")
         isValid = True
         errors={}
         if len(postData["title"]) < 2:
@@ -13,8 +16,16 @@ class ShowManager(models.Manager):
             errors["network"] = "Network should be at least 3 characters"
             isValid = False
         if len(postData["description"])<10:
-            errors["description"] = "Description should be at least 10 characters"
+            if(len(postData["description"])==0):
+                isValid = True
+            else:
+                errors["description"] = "Description should be at least 10 characters"
+                isValid = False
+                
+        if postData["release_date"]> now:
+            errors["release_date"] = "Release Date should be in the past"
             isValid = False
+
         return errors
 # Create your models here.
 
