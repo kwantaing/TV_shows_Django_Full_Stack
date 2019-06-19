@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    div{
+        padding:10px;
+        width:55%;
+    }
+
+</style>
+    <body>
+        <a href="/">Go Back</a>
+    <div class="main">
+        <h1>Edit Show {{show.id}}</h1>
+        <form action="/shows/{{show.id}}/update" method="post"> {% csrf_token %}
+            <div class="form-group">           
+                 <label for="title">Title</label>
+                <input class="form-control" type="text" name="title" value="{{show.title}}">
+            </div>
+            <div class="form-group">           
+                 <label for="network">Network</label>
+                <input class="form-control" type="text" name="network" value={{show.network}}>          
+                <label for="release_date">Release Date</label>
+                <input onfocus="(this.type='date')"class="form-control" type="text" name="release_date" value={{date}}>
+            </div>
+            <div class="form-group">           
+                <label for="title">Description</label>
+                <textarea class="form-control" name="description" value="show.description"></textarea>
+            </div>
+            <button class="btn btn-primary">Edit</button>
+            <a href="/shows/{{show.id}}">Go to Show</a>
+        </form>
+    </div>
+</body>
+</html>
