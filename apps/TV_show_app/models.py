@@ -4,7 +4,7 @@ from django.db import models
 
 
 class ShowManager(models.Manager):
-    def basic_validator(self,postData):
+    def basic_validator(self,postData,create=False):
         now = datetime.now()
         now = now.strftime("%Y-%m-%d")
         isValid = True
@@ -12,6 +12,12 @@ class ShowManager(models.Manager):
         if len(postData["title"]) < 2:
             errors["title"] = "Title should be at least 2 characters"
             isValid = False
+        if create == True:
+            if Show.objects.filter(title = postData["title"]):
+                errors["title1"] = "Title already exists in database"
+                isValid = False
+            else:
+                print("new show")
         if len(postData["network"]) < 3:
             errors["network"] = "Network should be at least 3 characters"
             isValid = False
@@ -21,7 +27,6 @@ class ShowManager(models.Manager):
             else:
                 errors["description"] = "Description should be at least 10 characters"
                 isValid = False
-                
         if postData["release_date"]> now:
             errors["release_date"] = "Release Date should be in the past"
             isValid = False

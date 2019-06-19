@@ -15,7 +15,7 @@ def new(request):
     return render(request,'index.html')
 
 def add_show(request):
-    errors = models.Show.objects.basic_validator(request.POST)
+    errors = models.Show.objects.basic_validator(request.POST,create = True)
     if request.method == "POST":
         if len(errors)>0:
             for key, value in errors.items():
